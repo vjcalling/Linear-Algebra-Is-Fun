@@ -19,6 +19,9 @@ class Vector(object):
         return 'Vector: {}'.format([round(coord, 3)
                                     for coord in self.coordinates])
 
+    def is_zero(self):
+        return set(self.coordinates) == set([Decimal(0)])
+
     def __eq__(self, v):
         return self.coordinates == v.coordinates
 
@@ -43,11 +46,23 @@ class Vector(object):
         except ZeroDivisionError:
             raise Exception('Cannot normalize the zero vector')
 
+    def dot_product(self, other):
+        return sum(x * y for x, y in zip(self.coordinates, other.coordinates))
 
+    def get_angle_rad(self, other):
+        dot_prod = round(self.normalize().dot_product(other.normalize()), 3)
+        return acos(dot_prod)
 
+    def get_angle_deg(self, other):
+        degrees_per_rad = 180. / pi
+        return degrees_per_rad * self.get_angle_rad(other)
 
+    def is_parallel(self, other):
+        return (self.is_zero() or other.is_zero() or
+                self.get_angle_rad(other) in [0, pi])
 
-
+    def is_orthogonal(self, other):
+        return round(self.dot_product(other), 3) == 0
 
 #==============================================================================================
 
@@ -88,7 +103,58 @@ if __name__ == '__main__':
     # *****************
 
 
+    v = Vector([7.887, 4.138])
+    w = Vector([-8.802, 6.776])
+    dot_product = v.dot_product(w)
+    print('first_dot_product: {}'.format(round(dot_product, 3)))
 
+    v = Vector([-5.955, -4.904, -1.874])
+    w = Vector([-4.496, -8.755, 7.103])
+    dot_product = v.dot_product(w)
+    print('second_dot_product: {}'.format(round(dot_product, 3)))
+
+    # *****************
+
+    v = Vector([3.183, -7.627])
+    w = Vector([-2.668, 5.319])
+    angle_rads = v.get_angle_rad(w)
+    print('first_angle_rads: {}'.format(angle_rads))
+
+    v = Vector([7.35, 0.221, 5.188])
+    w = Vector([2.751, 8.259, 3.985])
+    angle_degrees = v.get_angle_deg(w)
+    print('second_angle_degrees: {}'.format(angle_degrees))
+
+    # *****************
+
+    v = Vector([-7.579, -7.88])
+    w = Vector([22.737, 23.64])
+    is_parallel = v.is_parallel(w)
+    is_orthogonal = v.is_orthogonal(w)
+
+    print('1 parallel: {}, orthogonal: {}'.format(is_parallel, is_orthogonal))
+
+    v = Vector([-2.029, 9.97, 4.172])
+    w = Vector([-9.231, -6.639, -7.245])
+    is_parallel = v.is_parallel(w)
+    is_orthogonal = v.is_orthogonal(w)
+
+    print('2 parallel: {}, orthogonal: {}'.format(is_parallel, is_orthogonal))
+
+    v = Vector([-2.328, -7.284, -1.214])
+    w = Vector([-1.821, 1.072, -2.94])
+    is_parallel = v.is_parallel(w)
+    is_orthogonal = v.is_orthogonal(w)
+    print('3 parallel: {}, orthogonal: {}'.format(is_parallel, is_orthogonal))
+
+    v = Vector([2.118, 4.827])
+    w = Vector([0, 0])
+    is_parallel = v.is_parallel(w)
+    is_orthogonal = v.is_orthogonal(w)
+
+    print('4 parallel: {}, orthogonal: {}'.format(is_parallel, is_orthogonal))
+
+    # *****************
 
 
 
