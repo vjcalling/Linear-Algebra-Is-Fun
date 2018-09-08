@@ -64,6 +64,16 @@ class Vector(object):
     def is_orthogonal(self, other):
         return round(self.dot_product(other), 3) == 0
 
+    def get_projected_vector(self, other):
+        """
+        Gets projection of vector v in b
+        """
+        b_normalized = other.normalize()
+        return b_normalized.times_scalar(self.dot_product(b_normalized))
+
+    def get_orthogonal_vector(self, other):
+        return self.minus(self.get_projected_vector(other))
+
 #==============================================================================================
 
 
@@ -156,5 +166,27 @@ if __name__ == '__main__':
 
     # *****************
 
+    v = Vector([3.039, 1.879])
+    w = Vector([0.825, 2.036])
+    projected_vector = v.get_projected_vector(w)
+
+    print('projected vector is: {}'.format(projected_vector))
+
+    v = Vector([-9.88, -3.264, -8.159])
+    w = Vector([-2.155, -9.353, -9.473])
+    orthogonal_vector = v.get_orthogonal_vector(w)
+
+    print('orthogonal vector is: {}'.format(orthogonal_vector))
+
+    v = Vector([3.009, -6.172, 3.692, -2.51])
+    w = Vector([6.404, -9.144, 2.759, 8.718])
+    projected_vector = v.get_projected_vector(w)
+    orthogonal_vector = v.get_orthogonal_vector(w)
+
+    print('second projected vector is: {}'.format(projected_vector))
+
+    print('second orthogonal vector is: {}'.format(orthogonal_vector))
+
+    # *****************
 
 
