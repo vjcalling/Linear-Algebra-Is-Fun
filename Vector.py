@@ -74,6 +74,20 @@ class Vector(object):
     def get_orthogonal_vector(self, other):
         return self.minus(self.get_projected_vector(other))
 
+    def cross_product(self, other):
+        [x1, y1, z1] = self.coordinates
+        [x2, y2, z2] = other.coordinates
+        x = (y1 * z2) - (y2 * z1)
+        y = -((x1 * z2) - (x2 * z1))
+        z = (x1 * y2) - (x2 * y1)
+        return Vector([x, y, z])
+
+    def area_parallelogram(self, other):
+        return self.cross_product(other).magnitude()
+
+    def area_triangle(self, other):
+        return self.cross_product(other).magnitude() / 2
+
 #==============================================================================================
 
 
@@ -189,4 +203,21 @@ if __name__ == '__main__':
 
     # *****************
 
+    v1 = Vector([8.462, 7.893, -8.187])
+    w1 = Vector([6.984, -5.975, 4.778])
+
+    v2 = Vector([-8.987, -9.838, 5.031])
+    w2 = Vector([-4.268, -1.861, -8.866])
+
+    v3 = Vector([1.5, 9.547, 3.691])
+    w3 = Vector([-6.007, 0.124, 5.772])
+
+    first_cross_product = v1.cross_product(w1)
+    print('cross product is: {}'.format(first_cross_product))
+
+    area_parallelogram = v2.area_parallelogram(w2)
+    print('area parallelogram is: {}'.format(round(area_parallelogram, 3)))
+
+    area_triangle = v3.area_triangle(w3)
+    print('area triangle is: {}'.format(round(area_triangle, 3)))
 
